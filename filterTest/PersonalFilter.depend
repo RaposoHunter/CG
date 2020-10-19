@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1602602026 source:c:\users\pedro\desktop\c projects\c++ projects\opencv\personalfilter\main.cpp
+	<iostream>
+	<cstdio>
+	<stdlib.h>
+	<time.h>
+
