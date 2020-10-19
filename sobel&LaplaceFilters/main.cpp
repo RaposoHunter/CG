@@ -5,28 +5,32 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
+#if CV_VERSION_MAJOR == 4
+    #define CV_BGR2GRAY COLOR_BGR2GRAY
+#endif // Garante a portabilidade de algumas vari√°veis atuais
+
 using namespace std;
 using namespace cv;
 
 string LaplacianFilter(Mat img) {
     // De acordo com o site: https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
-    // "O filtro de Laplace realÁa regiıes com mudanÁas r·pidas de intensidade e, portanto, È comummente usado para detecÁ„o de bordas"
+    // "O filtro de Laplace real√ßa regi√µes com mudan√ßas r√°pidas de intensidade e, portanto, √© comummente usado para detec√ß√£o de bordas"
 
-    // Declarando as vari·veis que ser„o usadas
+    // Declarando as vari√°veis que ser√£o usadas
     Mat gray, draw, draw2;
 
     // Convertendo a imagem original para escala de cinza
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    cvtColor(img, gray, CV_BGR2GRAY);
 
     // Aplicando o filtro de LaPlace na imagem em tons de cinza
     Laplacian(gray, draw, CV_16S, 3);
     convertScaleAbs(draw, draw2);
-    // OBS.: N„o È possÌvel mostrar "draw" diretamente, n„o sei o porquÍ
-    //       Apenas depois de salvar a imagem em algum lugar È possÌvel lÍ-la depois
+    // OBS.: N√£o √© poss√≠vel mostrar "draw" diretamente, n√£o sei o porqu√™
+    //       Apenas depois de salvar a imagem em algum lugar √© poss√≠vel l√™-la depois
 
-    // Destinos das imagens com e sem convers„o de escala absoluta
-    string path1 = "./foreverPlayerLaplace.jpg"; //... sem convers„o
-    string path2 = "./foreverPlayerLaplaceConverted.jpg"; //... com convers„o
+    // Destinos das imagens com e sem convers√£o de escala absoluta
+    string path1 = "./foreverPlayerLaplace.jpg"; //... sem convers√£o
+    string path2 = "./foreverPlayerLaplaceConverted.jpg"; //... com convers√£o
 
     // Salvando ambas as imagens es seus respectivos destinos
     imwrite(path1, draw);
@@ -39,20 +43,20 @@ string LaplacianFilter(Mat img) {
 Mat SobelFilter(Mat img) {
     // O filtro de sobel tem uma funcionalidade similar ao filtro de laplace
 
-    // DeclaraÁ„o e atribuiÁ„o da imagem em tons de cinza a partir de "img"
+    // Declara√ß√£o e atribui√ß√£o da imagem em tons de cinza a partir de "img"
     Mat gray;
-    cvtColor(img, gray, COLOR_BGR2GRAY);
+    cvtColor(img, gray, CV_BGR2GRAY);
 
-    // DeclaraÁ„o e aplicaÁ„o do filtro sobel na imagem em tons de cinza
+    // Declara√ß√£o e aplica√ß√£o do filtro sobel na imagem em tons de cinza
     Mat sobelx;
     Sobel(gray, sobelx, CV_32F, 1, 0);
 
-    // Par‚metros chave para convers„o do filtro sobel
+    // Par√¢metros chave para convers√£o do filtro sobel
     double minVal, maxVal;
     minMaxLoc(sobelx, &minVal, &maxVal);
     cout << "minVal: " << minVal << "\nmaxval: " <<  maxVal << "\n";
 
-    // DeclaraÁ„o e atribuiÁ„o da imagem final a partir do filtro sobel
+    // Declara√ß√£o e atribui√ß√£o da imagem final a partir do filtro sobel
     Mat draw;
     double alpha = 255.0 / (maxVal - minVal), beta = -minVal * 255.0 / (maxVal - minVal);
     sobelx.convertTo(draw, CV_8U, alpha, beta);
@@ -65,8 +69,7 @@ Mat SobelFilter(Mat img) {
     return draw;
 }
 
-int main()
-{
+int main() {
     Mat img, laplaced, sobeled;
 
     img = imread("./forever.jpg");
