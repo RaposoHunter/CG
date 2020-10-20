@@ -134,9 +134,9 @@ Mat plotarHistograma( int ** histograma, int altura, int largura, int cvTipo, bo
         Point greenPoint1(x1, g_y1), greenPoint2(x2, g_y2);
         Point bluePoint1(x1, b_y1), bluePoint2(x2, b_y2);
 
-        line(hGraph, redPoint1, redPoint2, Scalar(255, 0, 0), 2);
+        line(hGraph, redPoint1, redPoint2, Scalar(0, 0, 255), 2);
         line(hGraph, greenPoint1, greenPoint2, Scalar(0, 255, 0), 2);
-        line(hGraph, bluePoint1, bluePoint2, Scalar(0, 0, 255), 2);
+        line(hGraph, bluePoint1, bluePoint2, Scalar(255, 0, 0), 2);
     }
 
     return hGraph;
