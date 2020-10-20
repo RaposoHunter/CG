@@ -91,9 +91,9 @@ Mat plotarHistograma( int ** histograma, Mat hGraph, bool adaptarEscala = true) 
         Point bluePoint1(x1, b_y1), bluePoint2(x2, b_y2);
 
         // Liga os pontos criados acima com suas respectivas cores
-        line(hGraph, redPoint1, redPoint2, Scalar(255, 0, 0), 2);
+        line(hGraph, redPoint1, redPoint2, Scalar(0, 0, 255), 2);
         line(hGraph, greenPoint1, greenPoint2, Scalar(0, 255, 0), 2);
-        line(hGraph, bluePoint1, bluePoint2, Scalar(0, 0, 255), 2);
+        line(hGraph, bluePoint1, bluePoint2, Scalar(255, 0, 0), 2);
     }
 
     return hGraph;
