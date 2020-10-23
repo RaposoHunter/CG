@@ -24,9 +24,8 @@ string LaplacianFilter(Mat img) {
 
     // Aplicando o filtro de LaPlace na imagem em tons de cinza
     Laplacian(gray, draw, CV_16S, 3);
-    convertScaleAbs(draw, draw2);
-    // OBS.: Não é possível mostrar "draw" diretamente, não sei o porquê
-    //       Apenas depois de salvar a imagem em algum lugar é possível lê-la depois
+    // Converte a imagem de CV_16S para CV_8UC3
+    convertScaleAbs(draw, draw2); 
 
     // Destinos das imagens com e sem conversão de escala absoluta
     string path1 = "./foreverPlayerLaplace.jpg"; //... sem conversão
