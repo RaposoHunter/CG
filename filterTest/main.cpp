@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 #include <time.h>
 
 using namespace std;
@@ -43,17 +43,6 @@ int ** filterMesh(int ** mesh, int rows, int cols) {
             }
 
             fmesh[i][j] = num/den;
-
-            /*if(i != 0 && i != rows - 1 && j != 0 && j != cols - 1) { // Se não for nas bordas
-                for(int r = -1; r < 2; r++) {
-                    for(int c = -1; c < 2; c++) {
-                        if(i + r >= rows || i + r < 0 || j + c >= cols || j + c < 0) continue;
-                        num += fmesh[i + r][j + c] * filter[r + 1][c + 1]
-                    }
-                }
-
-                fmesh[i][j] = num/den;
-            } else if()*/
         }
     }
 
