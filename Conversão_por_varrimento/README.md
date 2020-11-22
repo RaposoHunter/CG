@@ -1,8 +1,8 @@
 O programa pode exibir 6 formas/algoritmos diferentes.
 
-Para escolher entre os modos basta apertas as teclas 0-5. A saber:
-  0 - Linha desenhada por meio do Método do Declive
-  1 - Linha desenhada por meio do algoritmo Simple DDA
+Para escolher entre os modos basta apertas as teclas 0-5. A saber:\n
+  0 - Linha desenhada por meio do Método do Declive\n
+  1 - Linha desenhada por meio do algoritmo Simple DDA\n
   2 - Linha desenhada por meio do algoritmo de Bresenham
   3 - Circunferência desenhada por meio do método polinomial
   4 - Circunferência desenhada por meio do método trigonométrico
