@@ -6,7 +6,7 @@ Para escolher entre os modos basta apertas as teclas 0-5. A saber:
   * 2 - Linha desenhada por meio do algoritmo de Bresenham
   * 3 - Circunferência desenhada por meio do método polinomial
   * 4 - Circunferência desenhada por meio do método trigonométrico
-  * 5 - Circunferência desenhada por meio do algoritmo de bresenham
+  * 5 - Circunferência desenhada por meio do algoritmo de Bresenham
   
 O programa exibe, junto a cada figura, a representação mais próxima da ideal em amarelo que pisca (idealmente) a cada segundo.  
   
