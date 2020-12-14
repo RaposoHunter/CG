@@ -3,7 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <windows.h>
+
+#if __WIN32__ == 1
+    #define HAS_WINDOWS 1
+    #include <windows.h>
+#else
+    #define HAS_WINDOWS 0
+#endif
 
 #define PI 3.14159265358979323846
 
@@ -93,7 +99,7 @@ static void display(void) {
 
                 glVertex3dv(pts[index]);
 
-                if(j != n - 4) glVertex3dv(pts[i]); // Não é necessário criar o vertice ao fim do loop
+                if(j != n - 4) glVertex3dv(pts[i]); // NÃ£o Ã© necessÃ¡rio criar o vertice ao fim do loop
             }
         }
     glEnd();
@@ -170,10 +176,10 @@ double ** plotRegularPolygon(unsigned int sideNum, unsigned int sideLength, doub
 }
 
 int main(int argc, char *argv[]) {
-    unsigned int l; // Número de lados
+    unsigned int l; // NÃºmero de lados
 
-    double center[3]; // Vetor contendo as coordenadas do centro do polígono
-    double start[3]; // Vetor contendo as coordenadas iniciais do polígono
+    double center[3]; // Vetor contendo as coordenadas do centro do polÃ­gono
+    double start[3]; // Vetor contendo as coordenadas iniciais do polÃ­gono
 
     do {
         printf("Digite o numero de lados......: ");
@@ -191,8 +197,17 @@ int main(int argc, char *argv[]) {
 
     pts = plotRegularPolygon(n, l, center, start, pts);
 
-    int totalWidth   = GetSystemMetrics(SM_CXSCREEN);
-    int totalHeight  = GetSystemMetrics(SM_CYSCREEN);
+    int toatlWidth;
+    int totalHeight;
+    
+    if(HAS_WINDOWS) {
+        totalWidth   = GetSystemMetrics(SM_CXSCREEN);
+        totalHeight  = GetSystemMetrics(SM_CYSCREEN);
+    } else {
+        totalWidth   = 640;
+        totalHeight  = 640;  
+    }
+    
     int windowWidth  = totalWidth / 3;
     int windowHeight = windowWidth;
     int windowPosX   = (totalWidth  - windowWidth )/2;
