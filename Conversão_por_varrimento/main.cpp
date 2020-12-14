@@ -1,7 +1,14 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 #include <math.h>
-#include <windows.h>
+
+#if __WIN32 == 1
+    #defined HAS_WINDOWS 1
+    #include <windows.h>
+#else
+    #define HAS_WINDOWS 0
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <opencv2/core.hpp>
@@ -18,12 +25,12 @@ static int minX = -10;
 static int minY = -10;
 static int minZ = -10;
 
-// Vari·veis que controlam fatores estÈticos
+// Vari√°veis que controlam fatores est√©ticos
 static int draw =   0;
 static int axis =   1;
 static char *cmd = (char *) malloc(sizeof(char) * 10);
 
-// Estrutura respons·vel por auxiliar na criaÁ„o de pontos. Usado em CircunferenciaBresenham()
+// Estrutura respons√°vel por auxiliar na cria√ß√£o de pontos. Usado em CircunferenciaBresenham()
 typedef struct ponto {
     int x;
     int y;
@@ -39,13 +46,13 @@ Ponto * CriarPonto(int x, int y) {
     return pt;
 }
 
-// Renderiza uma string de caracteres na tela na posiÁ„o (x,y,0) usando a fonte escolhida.
+// Renderiza uma string de caracteres na tela na posi√ß√£o (x,y,0) usando a fonte escolhida.
 void showText(double x, double y, void* font, const char* str) {
     glRasterPos3d(x, y, 0);
     glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) str);
 }
 
-// P·ginas 7 - 9 do PDF
+// P√°ginas 7 - 9 do PDF
 void LinhaDeclive(int x1, int y1, int x2, int y2) {
     double m = (double)(y2 - y1)/(x2 - x1);
     double b = y1 - m * x1;
@@ -61,16 +68,16 @@ void LinhaDeclive(int x1, int y1, int x2, int y2) {
     glEnd();
 
     glColor3d(1,1,1);
-    showText(minX + .25, minY + .25, GLUT_BITMAP_HELVETICA_18, "MÈtodo do Declive");
+    showText(minX + .25, minY + .25, GLUT_BITMAP_HELVETICA_18, "M√©todo do Declive");
 }
 
-// P·ginas 10 - 13 do PDF
+// P√°ginas 10 - 13 do PDF
 void LinhaDDA(int x1, int y1, int x2, int y2) {
     double y;
     double m = (double)(y2 - y1)/(x2 - x1);
 
     glBegin(GL_LINE_STRIP);
-        glVertex2d(x1, y1); // VÈrtice inicial
+        glVertex2d(x1, y1); // V√©rtice inicial
         y = y1;
 
         for(int x = x1 + 1; x <= x2; x++) {
@@ -83,7 +90,7 @@ void LinhaDDA(int x1, int y1, int x2, int y2) {
     showText(minX + .25, minY + .25, GLUT_BITMAP_HELVETICA_18, "Simple DDA");
 }
 
-// P·ginas 14 - 22
+// P√°ginas 14 - 22
 void LinhaBresenham(int x1, int y1, int x2, int y2) {
     int a = y2 - y1,
         b = x1 - x2,
@@ -91,7 +98,7 @@ void LinhaBresenham(int x1, int y1, int x2, int y2) {
         x = x1,
         y = y1;
 
-    glBegin(GL_LINE_STRIP); // RepresentaÁ„o por Bresenham
+    glBegin(GL_LINE_STRIP); // Representa√ß√£o por Bresenham
         while(x <= x2) {
             glVertex2d(x, y);
             x++;
@@ -109,7 +116,7 @@ void LinhaBresenham(int x1, int y1, int x2, int y2) {
     showText(minX + .25, minY + .25, GLUT_BITMAP_HELVETICA_18, "Algoritmo de Bresenham");
 }
 
-// P·ginas 25 - 26 do PDF
+// P√°ginas 25 - 26 do PDF
 void CircunferenciaPolinomial(int a, int b, int r) {
     double y;
 
@@ -129,7 +136,7 @@ void CircunferenciaPolinomial(int a, int b, int r) {
     showText(minX + .25, minY + .25, GLUT_BITMAP_HELVETICA_18, "Circunferencia Polinomial");
 }
 
-// P·ginas 27 - 28 do PDF
+// P√°ginas 27 - 28 do PDF
 void CircunferenciaTrigonometrica(int a, int b, int r) {
     double x, y;
 
@@ -146,9 +153,9 @@ void CircunferenciaTrigonometrica(int a, int b, int r) {
     showText(minX + .25, minY + .25, GLUT_BITMAP_HELVETICA_18, "Circunferencia Trigonometrica");
 }
 
-// P·ginas 29 - 35 do PDF
+// P√°ginas 29 - 35 do PDF
 void CircunferenciaBresenham(int a, int b, int r) {
-    int d = 3 - 2*r; // Fator usado para aferir a posiÁ„o do proximo ponto
+    int d = 3 - 2*r; // Fator usado para aferir a posi√ß√£o do proximo ponto
     int y = r;
     int **pts;  // Ponteiro para guardar todos os pontos criados
     Ponto *pt = NULL, *cabeca = NULL;
@@ -166,7 +173,7 @@ void CircunferenciaBresenham(int a, int b, int r) {
 
         x++;
 
-        // Verifica se o ponto (x,y) ainda n„o criado È simetrico a um ponto (y,x) j· criado
+        // Verifica se o ponto (x,y) ainda n√£o criado √© simetrico a um ponto (y,x) j√° criado
         if(counter > 0) {
             Ponto *tmp = cabeca;
 
@@ -179,32 +186,32 @@ void CircunferenciaBresenham(int a, int b, int r) {
                 tmp = tmp->nxtPt;
             }
 
-            // Caso seja simÈtrico n„o È mais necess·rio adicionar pontos pois,
-            // de acordo com o algoritmo de Bresenham, as simetrias ser„o lidadas depois
+            // Caso seja sim√©trico n√£o √© mais necess√°rio adicionar pontos pois,
+            // de acordo com o algoritmo de Bresenham, as simetrias ser√£o lidadas depois
             if(isSymm) break;
         }
 
-        // Cria um novo ponto que aponta para a cabeÁa (head) da
-        // lista e, logo em seguida o torna a cabeÁa da lista
+        // Cria um novo ponto que aponta para a cabe√ßa (head) da
+        // lista e, logo em seguida o torna a cabe√ßa da lista
         pt = CriarPonto(x, y);
         pt->nxtPt = cabeca;
         cabeca = pt;
 
-        // Incrementa o n˙mero de pontos j· adicionados
+        // Incrementa o n√∫mero de pontos j√° adicionados
         counter++;
     }
 
-    // Inicia o ponteiro respons·vel por guardar todos os pontos da circunferencia
-    // OBS.: Como s„o oito ponto de simetria para cada ponto criado, ser„o adicionados 8 * counter pontos
+    // Inicia o ponteiro respons√°vel por guardar todos os pontos da circunferencia
+    // OBS.: Como s√£o oito ponto de simetria para cada ponto criado, ser√£o adicionados 8 * counter pontos
     pts = (int **) malloc(sizeof(int *) * counter * 8);
 
-    // Inicia todos os ponteiros que guardar„o as coordenadas dos pontos
+    // Inicia todos os ponteiros que guardar√£o as coordenadas dos pontos
     for(int i = 0; i < counter * 8; i++) {
         pts[i] = (int *) malloc(sizeof(int) * 2);
     }
 
-    // Na lista encadeada simples È impossÌvel correr por ela a partir do primeiro membro da lista.
-    // Portanto, È necess·rio um for decremental que atribua cada ponto ao seu respectivo Ìndice
+    // Na lista encadeada simples √© imposs√≠vel correr por ela a partir do primeiro membro da lista.
+    // Portanto, √© necess√°rio um for decremental que atribua cada ponto ao seu respectivo √≠ndice
     Ponto *tmp = cabeca;
     for(int i = counter - 1; i >= 0; i--) {
         pts[i][0] = tmp->x;
@@ -213,7 +220,7 @@ void CircunferenciaBresenham(int a, int b, int r) {
         tmp = tmp->nxtPt;
     }
 
-    // Realiza metade das simetrias a 4 eixos apresentada na p·gina 24 do PDF
+    // Realiza metade das simetrias a 4 eixos apresentada na p√°gina 24 do PDF
     for(int i = 0; i < counter; i++) {
         int compensacao = 2 * counter;
 
@@ -227,7 +234,7 @@ void CircunferenciaBresenham(int a, int b, int r) {
         pts[2 * compensacao - 1 - i][1] = -pts[i][1];
     }
 
-    // A outra metade dos pontos È decidida atravÈs da simetria no eixo y de maneira decremental
+    // A outra metade dos pontos √© decidida atrav√©s da simetria no eixo y de maneira decremental
     for(int index = 4 * counter, i = 4 * counter - 1; i >= 0; i--) {
         pts[index][0] = -pts[i][0];
         pts[index][1] =  pts[i][1];
@@ -245,7 +252,7 @@ void CircunferenciaBresenham(int a, int b, int r) {
         }
     glEnd();
 
-    // Desaloca os ponteiros usados para evitar o uso desnecess·rio de blocos de memÛria
+    // Desaloca os ponteiros usados para evitar o uso desnecess√°rio de blocos de mem√≥ria
     free(pt);
     free(cabeca);
     free(pts);
@@ -342,12 +349,12 @@ static void display(void) {
 
     glColor3d(1,0,0);
 
-    if(draw == 0) LinhaDeclive(x1, y1, x2, y2);               // RepresentaÁ„o Matricial de uma reta
-    else if(draw == 1) LinhaDDA(x1, y1, x2, y2);                // RepresentaÁ„o de uma reta por Simple DDA
-    else if(draw == 2) LinhaBresenham(x1, y1, x2, y2);          // RepresentaÁ„o de uma reta por Bresenham
-    else if(draw == 3) CircunferenciaPolinomial(a, b, r);       // RepresentaÁ„o de uma circunferencia pelo mÈtodo polinomial
-    else if(draw == 4) CircunferenciaTrigonometrica(a, b, r);   // RepresentaÁ„o de uma circunferencia pelo mÈtodo trigonomÈtrico
-    else CircunferenciaBresenham(a, b, r);                      // RepresentaÁ„o de uma circunferencia pelo mÈtodo de Bresenham
+    if(draw == 0) LinhaDeclive(x1, y1, x2, y2);               // Representa√ß√£o Matricial de uma reta
+    else if(draw == 1) LinhaDDA(x1, y1, x2, y2);                // Representa√ß√£o de uma reta por Simple DDA
+    else if(draw == 2) LinhaBresenham(x1, y1, x2, y2);          // Representa√ß√£o de uma reta por Bresenham
+    else if(draw == 3) CircunferenciaPolinomial(a, b, r);       // Representa√ß√£o de uma circunferencia pelo m√©todo polinomial
+    else if(draw == 4) CircunferenciaTrigonometrica(a, b, r);   // Representa√ß√£o de uma circunferencia pelo m√©todo trigonom√©trico
+    else CircunferenciaBresenham(a, b, r);                      // Representa√ß√£o de uma circunferencia pelo m√©todo de Bresenham
 
     if(time % 2 == 0) cmd[0] = 's';
     else cmd[0] = 'n';
@@ -368,7 +375,7 @@ static void key(unsigned char key, int x, int y) {
             exit(0);
             break;
 
-        // Seleciona entre as 6 representaÁıes do programa
+        // Seleciona entre as 6 representa√ß√µes do programa
         case '0':
             draw = 0;
             break;
@@ -388,7 +395,7 @@ static void key(unsigned char key, int x, int y) {
             draw = 5;
             break;
 
-        // Liga ou Desliga a representaÁ„o do plano cartesiano
+        // Liga ou Desliga a representa√ß√£o do plano cartesiano
         case 'a':
             if(axis) axis = 0;
             else axis = 1;
@@ -412,7 +419,10 @@ int main(int argc, char *argv[]) {
 
     glutInit(&argc, argv);
     glutInitWindowSize(largura, altura);
-    glutInitWindowPosition((GetSystemMetrics(SM_CXSCREEN) - largura)/2 , (GetSystemMetrics(SM_CYSCREEN) - altura)/2); // Inicia a tela centralizada
+    
+    if(HAS_WINDOWS) glutInitWindowPosition((GetSystemMetrics(SM_CXSCREEN) - largura)/2 , (GetSystemMetrics(SM_CYSCREEN) - altura)/2); // Inicia a tela centralizada
+    else glutInitWindowPosition(10, 10);
+    
     glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
 
     sprintf(windowName, "Scan Sweeping - %d:%d", maxX - minX, maxY - minY);
