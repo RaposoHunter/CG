@@ -2,7 +2,7 @@
 #include <GL/freeglut.h>
 #include <math.h>
 
-#if __WIN32 == 1
+#if __WIN32__ == 1
     #defined HAS_WINDOWS 1
     #include <windows.h>
 #else
